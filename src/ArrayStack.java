@@ -15,7 +15,7 @@ public class ArrayStack<T> implements Stack<T> {
     private T[] stack;
     private static final int defaultSize = 100;
     private boolean integrityOK = false;
-    private int MAX_CAPACITY = 10000;
+    private int MAX_CAPACITY = 10000; //prevents the stack from being initialized above hardware memory capacity, causing a potential crash and data loss
     
     public ArrayStack() {
         this(defaultSize);
@@ -27,12 +27,13 @@ public class ArrayStack<T> implements Stack<T> {
         if (size > MAX_CAPACITY)
             throw new IllegalArgumentException("Attempted to create a stack larger than the maximum allowed size.");
         @SuppressWarnings("unchecked")
-        T[] tempStack = (T[])new Object[size];
+        T[] tempStack = (T[])new Object[size]; //cast is okay because all values in new array are null references
         stack = tempStack;
         top = -1;
         integrityOK = true;
     }
 
+    //internal method that checks to make sure the stack was properly initiated before operating on it
     private void checkIntegrity() {
         if (!integrityOK)
             throw new SecurityException("ArrayStack object is corrupt.");
@@ -40,35 +41,39 @@ public class ArrayStack<T> implements Stack<T> {
 
     public void push(T inp) {
         checkIntegrity();
-        if (inp == null)
-            throw new NullPointerException("Attempted to add a null reference to the stack.");
         if (top == stack.length) {
             if (2*stack.length <= MAX_CAPACITY) {
                 stack = Arrays.copyOf(stack, 2*stack.length);
             } else
-                throw new IllegalArgumentException("ArrayStack size limit reached: resized array would exceed the maximum allowed size.");
-        }
-        
+                throw new IllegalStateException("ArrayStack size limit reached: resized array would exceed the maximum allowed size.");
+        } 
         stack[++top] = inp;
     }
 
     public T pop() {
-        @SuppressWarnings("unchecked")
-        T result = (T)"hello";
-        return result;
+        checkIntegrity();
+        if (this.isEmpty())
+            throw new IllegalStateException("Attempted to pop from an empty stack"); //to avoid crash from nullPointerException
+        T entry = stack[top];
+        stack[top--] = null;
+        return entry;
     }
 
     public T peek() {
-        @SuppressWarnings("unchecked")
-        T result = (T)"hello";
-        return result;
+        checkIntegrity();
+        if (this.isEmpty())
+            throw new IllegalStateException("Attempted to pop from an empty stack"); //to avoid crash from nullPointerException
+        return stack[top];
     }
 
     public boolean isEmpty() {
-        return false;
+        return (top < 0);
     }
 
     public void clear() {
-
+        for (int i = 0; i <= top; i++) { //no enhanced loop to avoid wasting time on empty references
+            stack[i] = null; 
+        }
+        top = -1;
     }
 }
