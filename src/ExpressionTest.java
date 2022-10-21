@@ -1,9 +1,25 @@
+// 
+//  Name:   Michalak, Dylan
+//  Project:  # 3
+//  Due:        10/19/2022
+//  Course:  cs-2400-01-f22 
+// 
+//  Description: 
+//    A java class that converts infix arithmetic expressions to postfix and calculates
+//    their resulting value, using a Stack ADT implemented with a resizeable array.
+// 
 public class ExpressionTest {
     public static void main(String[] args) {
 
-        String[] testExpression = { "^", "8", "-", "5", "*", "(", "3", "+", "6", ")"};
-        
-        System.out.println(Expression.evaluatePostfix(Expression.convertToPostfix(testExpression)));
+        String command = args[0];
+        String[] expression = command.split("\\s");
+
+        try {
+            System.out.println(Expression.evaluatePostfix(Expression.convertToPostfix(expression)));
+        } catch (IllegalStateException e) {
+            System.out.println("Attempted to evaluate an illegal argument, please input an infix " +
+                                "expression where all tokens are seperated by a space.");
+        }
         //This block is for individually testing the convertToPostfix method
         /* String[] postfix = Expression.convertToPostfix(testExpression);
         for (String i: postfix) {

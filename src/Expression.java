@@ -18,8 +18,8 @@ public class Expression {
      * @return an Array of Strings, with each string being an individual token in the postfix expression
      */
     public static String[] convertToPostfix(String[] infixExpression) {
-        if (!checkBalance(infixExpression))
-            throw new IllegalStateException("attempted to convert an unbalanced statement to postfix");
+        //if (!checkBalance(infixExpression))
+            //throw new IllegalStateException("attempted to convert an unbalanced statement to postfix");
 
         Stack<String> operatorStack = new ArrayStack<>();
         int tokenCount = infixExpression.length;
@@ -54,7 +54,7 @@ public class Expression {
                         break;
                     case ")":
                         topOperator = operatorStack.pop();
-                        while (topOperator != "(") {
+                        while (!topOperator.equals("(")) {
                             postfix[finalArrayindex] = topOperator;
                             finalArrayindex++;
                             topOperator = operatorStack.pop();
@@ -146,7 +146,7 @@ public class Expression {
         boolean isBalanced = true;
         int index = 0;
 
-        while (index < tokenCount && isBalanced) {
+        while (index < tokenCount  && isBalanced) {
             switch(expression[index]) {
                 case "(": case "[": case "{":
                     openDelimiterStack.push(expression[index]); //adds the delimiter to the top of the stack
