@@ -1,7 +1,7 @@
 public class ExpressionTest {
     public static void main(String[] args) {
 
-        String[] testExpression = { "8", "-", "5", "*", "(", "3", "+", "6", ")"};
+        String[] testExpression = { "^", "8", "-", "5", "*", "(", "3", "+", "6", ")"};
         
         System.out.println(Expression.evaluatePostfix(Expression.convertToPostfix(testExpression)));
         //This block is for individually testing the convertToPostfix method

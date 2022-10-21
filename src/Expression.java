@@ -27,16 +27,19 @@ public class Expression {
         int index = 0;
         int finalArrayindex = 0;
         String topOperator;
+        int operandCounter = 0, operatorCounter = 0;
         
         while(index < tokenCount) {
             String token = infixExpression[index];
             if (isVar(token)) {
                 postfix[finalArrayindex] = token;
                 finalArrayindex++;
+                operandCounter++;
             } else {
                 switch (token) {
                     case "^":
                         operatorStack.push(token);
+                        operatorCounter++;
                         break;
                     case "+": case "-": case "*" : case "/":
                         while(!operatorStack.isEmpty() && (precedence(token) <= precedence(operatorStack.peek()))) {
@@ -44,6 +47,7 @@ public class Expression {
                             finalArrayindex++;
                         }
                         operatorStack.push(token);
+                        operatorCounter++;
                         break;
                     case "(": case "[": case "{":
                         operatorStack.push(token);
@@ -83,9 +87,18 @@ public class Expression {
                 postfix[finalArrayindex] = operatorStack.pop();
                 finalArrayindex++;
             }
+
+        if (operatorCounter != (operandCounter - 1)) //if the expression is missing any necessary variables or operators, it's not a proper postfix expression
+            throw new IllegalStateException("Attempted to convert a non-infix statement to postfix");
+
         return Arrays.copyOfRange(postfix, 0, finalArrayindex);
     }
 
+    /**
+     * Evaluates the result of a postfix arithmetic expression
+     * @param postfixExpression a String array, where each entry is a token in a complete postfix expression
+     * @return the resulting double value of the expression
+     */
     public static double evaluatePostfix(String[] postfixExpression) {
         Stack<Double> valueStack = new ArrayStack<>();
         String token;
@@ -93,7 +106,6 @@ public class Expression {
         for (int i = 0; i < postfixExpression.length; i++) {
             token = postfixExpression[i];
             if (isVar(token)) {
-                System.out.println("this works!");
                 valueStack.push(Double.parseDouble(token));
             }
             else {
