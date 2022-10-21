@@ -18,8 +18,8 @@ public class Expression {
      * @return an Array of Strings, with each string being an individual token in the postfix expression
      */
     public static String[] convertToPostfix(String[] infixExpression) {
-        //if (!checkBalance(infixExpression))
-            //throw new IllegalStateException("attempted to convert an unbalanced statement to postfix");
+        if (!checkBalance(infixExpression))
+            throw new IllegalStateException("attempted to convert an unbalanced statement to postfix");
 
         Stack<String> operatorStack = new ArrayStack<>();
         int tokenCount = infixExpression.length;
