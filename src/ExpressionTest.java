@@ -1,11 +1,14 @@
 public class ExpressionTest {
     public static void main(String[] args) {
 
-        String[] testExpression = { "8", "-", "d", "5", "*", "(", "3", "+", "6", ")"};
-        String[] postfix = Expression.convertToPostfix(testExpression);
+        String[] testExpression = { "8", "-", "5", "*", "(", "3", "+", "6", ")"};
+        
+        System.out.println(Expression.evaluatePostfix(Expression.convertToPostfix(testExpression)));
+        //This block is for individually testing the convertToPostfix method
+        /* String[] postfix = Expression.convertToPostfix(testExpression);
         for (String i: postfix) {
             System.out.println(i);
-        }
+        } */
 
         //This block is for individually testing two Expression methods currently set to private
         /* String[] testExpression = {"[", "(", "5", ")", "]"};

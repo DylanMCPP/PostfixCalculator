@@ -86,9 +86,45 @@ public class Expression {
         return Arrays.copyOfRange(postfix, 0, finalArrayindex);
     }
 
-    public double evaluatePostfix(String[] postfixExpression) {
-        return 0;
+    public static double evaluatePostfix(String[] postfixExpression) {
+        Stack<Double> valueStack = new ArrayStack<>();
+        String token;
+
+        for (int i = 0; i < postfixExpression.length; i++) {
+            token = postfixExpression[i];
+            if (isVar(token)) {
+                System.out.println("this works!");
+                valueStack.push(Double.parseDouble(token));
+            }
+            else {
+                double operandTwo = valueStack.pop();
+                double operandOne = valueStack.pop();
+                double result;
+                switch(token) {
+                    case "+":
+                        result = operandOne + operandTwo;
+                        break;
+                    case "-":
+                        result = operandOne - operandTwo;
+                        break;
+                    case "*":
+                        result = operandOne * operandTwo;
+                        break;
+                    case "/":
+                        result = operandOne / operandTwo;
+                        break;
+                    case "^":
+                        result = Math.pow(operandOne, operandTwo);
+                        break;
+                    default:
+                        throw new IllegalStateException("Attempted to evaluate an illegal expression using Expression.evaluatePostfix()");
+                }
+                valueStack.push(result);
+            }
+        }
+        return valueStack.peek();
     }
+
 
     //checks to see whether expression's parenthesis, brackets, and braces occur in correct left/right pairs
     private static boolean checkBalance(String[] expression) {
