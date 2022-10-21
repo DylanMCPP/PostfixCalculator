@@ -8,15 +8,26 @@
 //    A java class that converts infix arithmetic expressions to postfix and calculates
 //    their resulting value, using a Stack ADT implemented with a resizeable array.
 // 
+import java.util.Arrays;
 public class Expression {
 
 
-    public String[] convertToPostfix(String[] infixExpression) {
+    /**
+     * Converts an infix arithmetic expression to its postfix form
+     * @param infixExpression an Array of Strings, with each string being an individual token in the infix expression
+     * @return an Array of Strings, with each string being an individual token in the postfix expression
+     */
+    public static String[] convertToPostfix(String[] infixExpression) {
+        if (!checkBalance(infixExpression))
+            throw new IllegalStateException("attempted to convert an unbalanced statement to postfix");
+
         Stack<String> operatorStack = new ArrayStack<>();
         int tokenCount = infixExpression.length;
         String[] postfix = new String[tokenCount];
         int index = 0;
         int finalArrayindex = 0;
+        String topOperator;
+        
         while(index < tokenCount) {
             String token = infixExpression[index];
             if (isVar(token)) {
@@ -28,10 +39,51 @@ public class Expression {
                         operatorStack.push(token);
                         break;
                     case "+": case "-": case "*" : case "/":
-                        while(!operatorStack.isEmpty() && )
+                        while(!operatorStack.isEmpty() && (precedence(token) <= precedence(operatorStack.peek()))) {
+                            postfix[finalArrayindex] = operatorStack.pop();
+                            finalArrayindex++;
+                        }
+                        operatorStack.push(token);
+                        break;
+                    case "(": case "[": case "{":
+                        operatorStack.push(token);
+                        break;
+                    case ")":
+                        topOperator = operatorStack.pop();
+                        while (topOperator != "(") {
+                            postfix[finalArrayindex] = topOperator;
+                            finalArrayindex++;
+                            topOperator = operatorStack.pop();
+                        }
+                        break;
+                    case "]":
+                        topOperator = operatorStack.pop();
+                        while (topOperator != "[") {
+                            postfix[finalArrayindex] = topOperator;
+                            finalArrayindex++;
+                            topOperator = operatorStack.pop();
+                        }
+                        break;
+                    case "}":
+                        topOperator = operatorStack.pop();
+                        while (topOperator != "{") {
+                            postfix[finalArrayindex] = topOperator;
+                            finalArrayindex++;
+                            topOperator = operatorStack.pop();
+                        }
+                        break;
+                    default:
+                        throw new IllegalStateException("Attempted to convert a non-infix statement to postfix");
                 }
             }
+            index++;
         }
+        while (!operatorStack.isEmpty())
+            {
+                postfix[finalArrayindex] = operatorStack.pop();
+                finalArrayindex++;
+            }
+        return Arrays.copyOfRange(postfix, 0, finalArrayindex);
     }
 
     public double evaluatePostfix(String[] postfixExpression) {
@@ -39,7 +91,7 @@ public class Expression {
     }
 
     //checks to see whether expression's parenthesis, brackets, and braces occur in correct left/right pairs
-    private boolean checkBalance(String[] expression) {
+    private static boolean checkBalance(String[] expression) {
 
         Stack<String> openDelimiterStack = new ArrayStack<>();
         int tokenCount = expression.length;
@@ -66,7 +118,7 @@ public class Expression {
     }
 
     //returns true if the token is allowed in an infix expression
-    private boolean isVar(String token) {
+    private static boolean isVar(String token) {
         try {
             Double.parseDouble(token);
             return true;
@@ -91,7 +143,7 @@ public class Expression {
             case "^":
                 return 3;
             default:
-                throw new RuntimeException("attempted to assess precedence of a non-operator token");
+                return -1;
         }
     }
 

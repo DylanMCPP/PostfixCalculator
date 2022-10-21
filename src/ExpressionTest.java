@@ -1,6 +1,14 @@
 public class ExpressionTest {
     public static void main(String[] args) {
-        String[] testExpression = {"[", "(", "5", ")", "]"};
+
+        String[] testExpression = { "8", "-", "d", "5", "*", "(", "3", "+", "6", ")"};
+        String[] postfix = Expression.convertToPostfix(testExpression);
+        for (String i: postfix) {
+            System.out.println(i);
+        }
+
+        //This block is for individually testing two Expression methods currently set to private
+        /* String[] testExpression = {"[", "(", "5", ")", "]"};
         String[] badTestExpression = {"d", "(", "]", "+", "5"};
         if(Expression.checkBalance(testExpression) && !Expression.checkBalance(badTestExpression))
             System.out.println("checkBalance() works!");
@@ -11,5 +19,6 @@ public class ExpressionTest {
             System.out.println("isVar() works!");
         else
             System.out.println("isVar() does not work :(");
+        */
     }
 }
