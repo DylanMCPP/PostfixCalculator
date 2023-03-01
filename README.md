@@ -1,7 +1,7 @@
 ## Getting Started
 
 A java class that converts infix arithmetic expressions to postfix and calculates
-their resulting value, using a Stack ADT implemented with a resizeable array.
+their resulting value, using the Stack ADT implemented with a resizeable array.
 
 ## Folder Structure
 
